@@ -1,0 +1,44 @@
+html, body{
+  margin: 0;
+  font-size: 100%;
+}
+
+body{
+  background-color: #1b1b1b;
+}
+.container {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  padding: 2rem 0;
+
+  &.game{
+    height: 510px;
+    background-color: #101010;
+
+  }
+
+  &.meta{
+    max-width: 900px;
+    margin: auto;
+    justify-content: space-between;
+    color: white;
+    flex-direction: row;
+  }
+
+}
+
+canvas{
+  position: absolute;
+}
+
+.level{
+  color: white;
+}
+
+h1{
+  font-size: 1rem;
+  margin: 0;
+}
