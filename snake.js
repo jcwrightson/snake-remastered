@@ -208,9 +208,9 @@ class Snake {
 
                 document.getElementById('score').innerText = `${this.SCORE}`
                 this.snakeLength += 2
-                this.fps += this.level * 0.1
+                this.fps += .5
 
-                if(this.level % 6 === 1){
+                if(this.level % 8 === 1){
                     this.doPowerUp()
                 }
 
@@ -247,7 +247,7 @@ class Snake {
 
                 this.powerUpPosition = [0, 0]
 
-                this.fps = this.fps - ((this.level * 0.1) * 5)
+                this.fps = this.fps - 4
                 this.SCORE += 100
             }
 
