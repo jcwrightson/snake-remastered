@@ -1,35 +1,47 @@
 html, body {
   margin: 0;
-  font-size: 100%; }
+  padding: 0; }
+
+* {
+  box-sizing: border-box; }
 
 body {
-  background-color: #1b1b1b; }
+  font-family: monospace;
+  color: white;
+  background-color: #323a3e; }
 
-.container {
+main.game {
   display: flex;
-  position: relative;
-  justify-content: center;
   align-items: center;
-  flex-direction: row;
-  padding: 2rem 0; }
-  .container.game {
-    height: 510px;
-    background-color: #101010; }
-  .container.meta {
-    max-width: 900px;
-    margin: auto;
-    justify-content: space-between;
-    color: white;
-    flex-direction: row; }
-
-canvas {
-  position: absolute; }
-
-.level {
-  color: white; }
-
-h1 {
-  font-size: 1rem;
-  margin: 0; }
+  justify-content: space-between;
+  flex-direction: column;
+  margin-top: 2rem; }
+  main.game .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    position: relative;
+    max-width: 900px; }
+    main.game .container.title {
+      flex-direction: row;
+      font-size: 1.5rem; }
+      main.game .container.title h1 {
+        margin: 2rem 0;
+        font-family: monospace; }
+    main.game .container.meta {
+      font-size: 1rem;
+      flex-direction: row;
+      justify-content: space-between;
+      padding: .5rem; }
+  main.game canvas, main.game .splash {
+    position: absolute; }
+  main.game .splash {
+    z-index: 10;
+    color: #eb5050; }
+    main.game .splash.js-active {
+      display: none; }
+  main.game .meta, main.game .splash {
+    color: #eb5050; }
 
 /*# sourceMappingURL=style.css.map */

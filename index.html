@@ -8,17 +8,27 @@
     <title>Snake</title>
 </head>
 <body>
-    <div class="container game">
-        <canvas id="snake"></canvas>
-        <canvas id="pip"></canvas>
-        <canvas id="powerup"></canvas>
-    </div>
 
-    <div class="container meta">
-        <div id="coords"></div>
-        <h1>Level: <span id="level"></span></h1>
-        <h1>Score: <span id="score"></span></h1>
-        <h1>High Score: <span id="highScore"></span></h1>
-    </div>
+    <main class="game">
+
+        <div class="container title">
+            <h1>Snake</h1>
+        </div>
+
+        <div class="container view">
+            <canvas id="snake"></canvas>
+            <canvas id="pip"></canvas>
+            <canvas id="powerup"></canvas>
+            <div class="splash">Press [SPACE] to Start</div>
+        </div>
+
+        <div class="container meta">
+            <!--<div id="coords"></div>-->
+            <div>Level: <span id="level">0</span></div>
+            <div>High Score: <span id="highScore"></span></div>
+        </div>
+
+    </main>
+
 </body>
 </html>

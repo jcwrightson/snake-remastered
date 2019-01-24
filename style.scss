@@ -1,44 +1,65 @@
 html, body{
   margin: 0;
-  font-size: 100%;
+  padding: 0;
 }
+
+*{box-sizing: border-box}
+
 
 body{
-  background-color: #1b1b1b;
-}
-.container {
-  display: flex;
-  position: relative;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-  padding: 2rem 0;
-
-  &.game{
-    height: 510px;
-    background-color: #101010;
-
-  }
-
-  &.meta{
-    max-width: 900px;
-    margin: auto;
-    justify-content: space-between;
-    color: white;
-    flex-direction: row;
-  }
-
-}
-
-canvas{
-  position: absolute;
-}
-
-.level{
+  font-family: monospace;
   color: white;
+  background-color: #323a3e;
 }
 
-h1{
-  font-size: 1rem;
-  margin: 0;
+main.game{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  margin-top: 2rem;
+  .container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    position: relative;
+    max-width: 900px;
+
+    &.title{
+      flex-direction: row;
+      //justify-content: flex-start;
+      font-size: 1.5rem;
+      h1{
+        margin: 2rem 0;
+        font-family: monospace;
+      }
+    }
+
+    &.meta{
+      font-size: 1rem;
+      flex-direction: row;
+      justify-content: space-between;
+      padding: .5rem;
+
+    }
+  }
+
+  canvas, .splash{
+    position: absolute;
+  }
+
+  .splash{
+    z-index: 10;
+    color: #eb5050;
+
+    &.js-active{
+      display: none;
+    }
+  }
+
+  .meta, .splash{
+    color: #eb5050;
+  }
+
 }

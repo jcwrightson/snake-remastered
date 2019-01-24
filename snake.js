@@ -1,7 +1,6 @@
 //JS Snake
 //Author: jcwrightson@gmail.com
 
-
 class Snake {
      constructor(){
          this.gameCanvas = document.getElementById('snake')
@@ -18,14 +17,13 @@ class Snake {
 
          this.newLevel = false
          this.HIGH_SCORE = 0
-         this.SCORE = 0
          this.startFPS = 15
          this.scaleFactor = 15
          this.gameHeight = 40
          this.gameWidth = 60
          this.snakeBody = []
          this.snakeLength = 5
-         this.level = 1
+         this.level = 0
          this.fps = this.startFPS
          this.dead = true
          this.up = false
@@ -42,7 +40,9 @@ class Snake {
          this.powerUpCanvas.width = this.gameWidth * this.scaleFactor
          this.powerUpCanvas.height = this.gameHeight * this.scaleFactor
 
+     }
 
+     init(){
          this.bindEventListeners()
 
          if(localStorage.getItem("SNAKE_HIGH_SCORE")){
@@ -52,19 +52,23 @@ class Snake {
          }
 
          this.gameCanvas.style.backgroundColor = '#232323'
-         document.querySelector('.game').style.height = `${this.gameHeight * this.scaleFactor}px`
+         document.querySelector('.view').style.height = `${this.gameHeight * this.scaleFactor}px`
          document.getElementById('highScore').innerText = `${this.HIGH_SCORE}`
-     }
 
-     start(){
          this.toggleDirection('down')
          requestAnimationFrame(this.gameLoop.bind(this))
+     }
+
+     stop(){
+         this.dead = true
+         document.querySelector('.splash').classList.toggle('js-active')
      }
 
      bindEventListeners(){
          document.addEventListener('keydown', (e)=>{
              if(e.code === 'Space' && this.dead){
                  this.resetGame()
+                 document.querySelector('.splash').classList.toggle('js-active')
              }
          })
 
@@ -124,23 +128,23 @@ class Snake {
 
     doPowerUp(){
 
-        this.powerUp.fillStyle = '#4286ff'
+        this.powerUp.fillStyle = '#ffa91e'
         this.powerUpPosition[0] = this.randomPixel()[0]
         this.powerUpPosition[1] = this.randomPixel()[1]
         this.powerUp.fillRect(this.powerUpPosition[0], this.powerUpPosition[1], this.scaleFactor, this.scaleFactor)
 
-        let green = false
+        let flash = false
         this.colorSwitch = setInterval(()=>{
 
-            if(green){
-                this.powerUp.fillStyle = '#4286ff'
+            if(flash){
+                this.powerUp.fillStyle = '#ffa91e'
                 this.powerUp.fillRect(this.powerUpPosition[0], this.powerUpPosition[1], this.scaleFactor, this.scaleFactor)
             }else{
-                this.powerUp.fillStyle = '#85ff03'
+                this.powerUp.fillStyle = '#ffd100'
                 this.powerUp.fillRect(this.powerUpPosition[0], this.powerUpPosition[1], this.scaleFactor, this.scaleFactor)
             }
 
-            green = !green
+            flash = !flash
 
         }, 200)
 
@@ -171,8 +175,7 @@ class Snake {
     }
 
     resetGame(){
-        this.level = 1
-        this.SCORE = 0
+        this.level = 0
         this.fps = this.startFPS
         this.dead = false
         this.newLevel = true
@@ -197,20 +200,20 @@ class Snake {
         if(!this.dead) {
 
             if(this.newLevel){
-                this.pip.fillStyle = 'red'
+                this.level++
+                this.pip.fillStyle = '#eb5050'
                 this.pipPosition[0] = this.randomPixel()[0]
                 this.pipPosition[1] = this.randomPixel()[1]
 
                 this.pip.fillRect(this.pipPosition[0], this.pipPosition[1], this.scaleFactor, this.scaleFactor)
                 this.newLevel = false
                 document.getElementById('level').innerText = `${this.level}`
-                this.level++
 
-                document.getElementById('score').innerText = `${this.SCORE}`
+
                 this.snakeLength += 2
                 this.fps += .5
 
-                if(this.level % 8 === 1){
+                if((this.level % 8 === 1) && this.level !== 1){
                     this.doPowerUp()
                 }
 
@@ -236,7 +239,6 @@ class Snake {
             if(this.pipPosition[0] === this.snakePosition[0] && this.pipPosition[1] === this.snakePosition[1]){
                 this.newLevel = true
                 this.pip.clearRect(this.pipPosition[0], this.pipPosition[1], this.scaleFactor, this.scaleFactor)
-                this.SCORE += 50
             }
 
             //Detect PowerUp Collision
@@ -246,14 +248,12 @@ class Snake {
                 clearTimeout(this.colorSwitch)
 
                 this.powerUpPosition = [0, 0]
-
                 this.fps = this.fps - 4
-                this.SCORE += 100
             }
 
             //Detect Bounds Collision
             if((this.snakePosition[0] < 0 || this.snakePosition[0] === this.gameWidth * this.scaleFactor) || (this.snakePosition[1] < 0 || this.snakePosition[1] === this.gameHeight * this.scaleFactor)){
-                this.dead = true
+                this.stop()
             }
 
             //ToDo: Detect Self Collision
@@ -261,9 +261,8 @@ class Snake {
                 return this.snakeBody.map((position , index)=>{
                     if(index > 0) {
                         return this.snakePosition[0] === position[0] && this.snakePosition[1] === position[1]
-                    }else{
-                        return false
                     }
+                    return false
                 })
             }
 
