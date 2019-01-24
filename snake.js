@@ -1,5 +1,32 @@
-//JS Snake
-//Author: jcwrightson@gmail.com
+/*
+    JS Snake
+    jcwrightson@gmail.com
+    https://jcwrightson.com
+
+    USAGE:
+
+    const game = new Snake()
+    game.init()
+
+    MARKUP:
+
+    <div>
+        <canvas id="snake"></canvas>
+        <canvas id="pip"></canvas>
+        <canvas id="powerup"></canvas>
+
+        <div class="splash">
+            <div class="highscore">New High Score!!</div>
+            <div>Press [SPACE] to Start</div>
+        </div>
+    </div>
+
+    <div>
+        <div>Level: <span id="level">0</span></div>
+        <div>High Score: <span id="highScore"></span></div>
+    </div>
+
+*/
 
 class Snake {
      constructor(){
@@ -17,21 +44,24 @@ class Snake {
 
          this.newLevel = false
          this.HIGH_SCORE = 0
-         this.startFPS = 15
+         this.startFPS = 12
          this.scaleFactor = 15
          this.gameHeight = 40
          this.gameWidth = 60
          this.snakeBody = []
          this.snakeLength = 5
+         this.keyPressTimeout = 50
          this.level = 0
          this.fps = this.startFPS
          this.dead = true
          this.up = false
-         this.down = false
+         this.down = true
          this.left = false
          this.right = false
          this.powerUpTimer = null
          this.colorSwitch = null
+         this.keysActive = true
+
 
          this.gameCanvas.width = this.gameWidth * this.scaleFactor
          this.gameCanvas.height = this.gameHeight * this.scaleFactor
@@ -40,10 +70,19 @@ class Snake {
          this.powerUpCanvas.width = this.gameWidth * this.scaleFactor
          this.powerUpCanvas.height = this.gameHeight * this.scaleFactor
 
+         this.beep = new Audio('beep.wav')
+         this.ding = new Audio('ding.flac')
+         this.newHighScore = new Audio('high-score.wav')
+
+         this.backgroundColor = '#232323'
+
+
      }
 
      init(){
          this.bindEventListeners()
+
+         document.querySelector('.splash .highscore').classList.remove('js-active')
 
          if(localStorage.getItem("SNAKE_HIGH_SCORE")){
              this.HIGH_SCORE = localStorage.getItem("SNAKE_HIGH_SCORE")
@@ -51,109 +90,185 @@ class Snake {
              this.HIGH_SCORE = 0
          }
 
-         this.gameCanvas.style.backgroundColor = '#232323'
+         this.gameCanvas.style.backgroundColor = this.backgroundColor
          document.querySelector('.view').style.height = `${this.gameHeight * this.scaleFactor}px`
          document.getElementById('highScore').innerText = `${this.HIGH_SCORE}`
 
          this.toggleDirection('down')
          requestAnimationFrame(this.gameLoop.bind(this))
+
+
+         // localStorage.removeItem("SNAKE_HIGH_SCORE")
      }
 
      stop(){
+
          this.dead = true
          document.querySelector('.splash').classList.toggle('js-active')
+         document.querySelector('.splash .highscore').classList.remove('js-active')
+
+         if(this.HIGH_SCORE < this.level - 1){
+             this.HIGH_SCORE = this.level - 1
+             this.newHighScore.play()
+             document.querySelector('.splash .highscore').classList.toggle('js-active')
+             localStorage.setItem("SNAKE_HIGH_SCORE", this.level - 1)
+             document.getElementById('highScore').innerText = `${this.HIGH_SCORE}`
+         }
+
+
+     }
+
+     areKeysActive(){
+         return this.keysActive
+     }
+
+     isPixelinUse(coords){
+         return this.snakeBody.filter(part => {
+             return part[0] === coords[0] && part[1] === coords[1]
+         }).length > 0
      }
 
      bindEventListeners(){
-         document.addEventListener('keydown', (e)=>{
-             if(e.code === 'Space' && this.dead){
-                 this.resetGame()
-                 document.querySelector('.splash').classList.toggle('js-active')
-             }
-         })
 
          document.addEventListener('keydown', (e)=>{
-             if(e.code === 'ArrowUp'){
-                 this.toggleDirection('up')
+             const toggleKeysActive = () => {
+                 this.keysActive = false
+                 setTimeout(()=>{
+                     this.keysActive = true
+                 }, this.keyPressTimeout)
              }
-         })
 
-         document.addEventListener('keydown', (e)=>{
-             if(e.code === 'ArrowDown'){
-                 this.toggleDirection('down')
-             }
-         })
-
-         document.addEventListener('keydown', (e)=>{
-             if(e.code === 'ArrowLeft'){
-                 this.toggleDirection('left')
-             }
-         })
-
-         document.addEventListener('keydown', (e)=>{
-             if(e.code === 'ArrowRight'){
-                 this.toggleDirection('right')
+             if(this.areKeysActive()) {
+                 switch (e.code) {
+                     case 'ArrowUp' : {
+                         toggleKeysActive()
+                         this.toggleDirection('up')
+                         break
+                     }
+                     case 'ArrowDown' : {
+                         toggleKeysActive()
+                         this.toggleDirection('down')
+                         break
+                     }
+                     case 'ArrowLeft' : {
+                         toggleKeysActive()
+                         this.toggleDirection('left')
+                         break
+                     }
+                     case 'ArrowRight' : {
+                         toggleKeysActive()
+                         this.toggleDirection('right')
+                         break
+                     }
+                     case 'Space' : {
+                         if(this.dead){
+                             this.resetGame()
+                             document.querySelector('.splash').classList.toggle('js-active')
+                             toggleKeysActive()
+                             break
+                         }else{
+                             break
+                         }
+                     }
+                 }
              }
          })
 
      }
 
+
     toggleDirection(dir){
-        this.up = false
-        this.down = false
-        this.left = false
-        this.right = false
 
-        if(dir === 'up'){
-            this.up = true
+        const resetDir = () => {
+            this.up = false
+            this.down = false
+            this.left = false
+            this.right = false
         }
 
-        if(dir === 'down'){
-            this.down = true
+        const setDir = (dir) => {
+            if(dir === 'up'){
+                this.up = true
+            }
+
+            if(dir === 'down'){
+                this.down = true
+            }
+
+            if(dir === 'left'){
+                this.left = true
+            }
+
+            if(dir === 'right'){
+                this.right = true
+            }
         }
 
-        if(dir === 'left'){
-            this.left = true
+        if(this.up && dir !== 'down' || this.down && dir !== 'up'){
+            resetDir()
+            setDir(dir)
         }
 
-        if(dir === 'right'){
-            this.right = true
+        if(this.left && dir !== 'right' || this.right && dir !== 'left'){
+            resetDir()
+            setDir(dir)
         }
+
+
     }
 
     randomPixel(){
-        return [Math.floor(Math.random() * Math.floor(this.gameWidth)) * this.scaleFactor,
-            Math.floor(Math.random() * Math.floor(this.gameHeight)) * this.scaleFactor]
+        return [
+            Math.floor(Math.random() * Math.floor(this.gameWidth)) * this.scaleFactor,
+            Math.floor(Math.random() * Math.floor(this.gameHeight)) * this.scaleFactor
+        ]
     }
 
-    doPowerUp(){
 
-        this.powerUp.fillStyle = '#ffa91e'
-        this.powerUpPosition[0] = this.randomPixel()[0]
-        this.powerUpPosition[1] = this.randomPixel()[1]
-        this.powerUp.fillRect(this.powerUpPosition[0], this.powerUpPosition[1], this.scaleFactor, this.scaleFactor)
+    doPowerUp(value, type, color, seconds){
 
-        let flash = false
-        this.colorSwitch = setInterval(()=>{
+         const dropPowerUp = ()=>{
+             this.powerUpPosition = this.randomPixel()
+             this.powerUp.value = value
+             this.powerUp.type = type
 
-            if(flash){
-                this.powerUp.fillStyle = '#ffa91e'
-                this.powerUp.fillRect(this.powerUpPosition[0], this.powerUpPosition[1], this.scaleFactor, this.scaleFactor)
-            }else{
-                this.powerUp.fillStyle = '#ffd100'
-                this.powerUp.fillRect(this.powerUpPosition[0], this.powerUpPosition[1], this.scaleFactor, this.scaleFactor)
-            }
+             while (this.isPixelinUse(this.powerUpPosition)) {
+                 this.powerUpPosition = this.randomPixel()
+             }
 
-            flash = !flash
+             this.powerUp.fillRect(this.powerUpPosition[0], this.powerUpPosition[1], this.scaleFactor, this.scaleFactor)
 
-        }, 200)
+             let flash = true
+             this.colorSwitch = setInterval(() => {
+                 if (flash) {
+                     this.powerUp.fillStyle = color
+                     this.powerUp.fillRect(this.powerUpPosition[0], this.powerUpPosition[1], this.scaleFactor, this.scaleFactor)
+                 } else {
+                     this.powerUp.fillStyle = this.backgroundColor
+                     this.powerUp.fillRect(this.powerUpPosition[0], this.powerUpPosition[1], this.scaleFactor, this.scaleFactor)
+                 }
 
-        this.powerUpTimer = setTimeout(()=>{
-            this.powerUp.clearRect(0, 0,  this.gameWidth * this.scaleFactor, this.gameHeight * this.scaleFactor)
+                 flash = !flash
+
+             }, 100)
+
+             this.powerUpTimer = setTimeout(() => {
+                 this.powerUp.clearRect(0, 0, this.gameWidth * this.scaleFactor, this.gameHeight * this.scaleFactor)
+                 this.powerUpPosition = [0, 0]
+                 clearInterval(this.colorSwitch)
+                 clearTimeout(this.powerUpTimer)
+             }, seconds * 1000)
+         }
+
+        if(this.powerUpPosition === [0,0]) {
+           dropPowerUp()
+        }else{
+            this.powerUp.clearRect(0, 0, this.gameWidth * this.scaleFactor, this.gameHeight * this.scaleFactor)
             this.powerUpPosition = [0, 0]
             clearInterval(this.colorSwitch)
             clearTimeout(this.powerUpTimer)
-        }, 5000)
+            dropPowerUp()
+        }
     }
 
     move(){
@@ -182,6 +297,7 @@ class Snake {
         this.snakePosition = [0,0]
         this.snakeBody = []
         this.snakeLength = 5
+        this.down = true
 
         this.snake.clearRect(0,0, this.gameWidth * this.scaleFactor, this.gameHeight * this.scaleFactor)
         this.pip.clearRect(0, 0 , this.gameWidth * this.scaleFactor, this.gameHeight * this.scaleFactor)
@@ -202,24 +318,33 @@ class Snake {
             if(this.newLevel){
                 this.level++
                 this.pip.fillStyle = '#eb5050'
-                this.pipPosition[0] = this.randomPixel()[0]
-                this.pipPosition[1] = this.randomPixel()[1]
+                this.pipPosition = this.randomPixel()
+
+                while(this.isPixelinUse(this.pipPosition)){
+                    this.pipPosition = this.randomPixel()
+                }
 
                 this.pip.fillRect(this.pipPosition[0], this.pipPosition[1], this.scaleFactor, this.scaleFactor)
                 this.newLevel = false
-                document.getElementById('level').innerText = `${this.level}`
 
+                document.getElementById('level').innerText = `${this.level}`
 
                 this.snakeLength += 2
                 this.fps += .5
 
-                if((this.level % 8 === 1) && this.level !== 1){
-                    this.doPowerUp()
-                }
 
+                if(this.level > 1) {
+                    if (this.level % 10 === 1) {
+                        this.doPowerUp(Math.abs(this.level * 0.1), "length", '#19db00', 8)
+                    }else {
+                        if (this.level % 6 === 1) {
+                            this.doPowerUp(2, "speed", '#ffa91e', 5)
+                        }
+                    }
+                }
             }
 
-            this.snake.fillStyle = '#fafafa'
+            this.snake.fillStyle = '#f2f2f2'
 
             //Update Snake Coords [TIP]
             this.snakePosition[0] += (this.move()[0] * this.scaleFactor)
@@ -237,18 +362,36 @@ class Snake {
 
             //Detect Pip Collision
             if(this.pipPosition[0] === this.snakePosition[0] && this.pipPosition[1] === this.snakePosition[1]){
+                this.ding.play()
                 this.newLevel = true
                 this.pip.clearRect(this.pipPosition[0], this.pipPosition[1], this.scaleFactor, this.scaleFactor)
             }
 
             //Detect PowerUp Collision
-            if(this.powerUpPosition[0] === this.snakePosition[0] && this.powerUpPosition[1] === this.snakePosition[1]){
-                this.powerUp.clearRect(0, 0,  this.gameWidth * this.scaleFactor, this.gameHeight * this.scaleFactor)
-                clearInterval(this.powerUpTimer)
-                clearTimeout(this.colorSwitch)
+            if(this.powerUpPosition !== [0, 0]) {
+                if (this.powerUpPosition[0] === this.snakePosition[0] && this.powerUpPosition[1] === this.snakePosition[1]) {
+                    this.beep.play()
+                    this.powerUp.clearRect(0, 0, this.gameWidth * this.scaleFactor, this.gameHeight * this.scaleFactor)
+                    clearInterval(this.powerUpTimer)
+                    clearTimeout(this.colorSwitch)
 
-                this.powerUpPosition = [0, 0]
-                this.fps = this.fps - 4
+                    this.powerUpPosition = [0, 0]
+
+                    if(this.powerUp.type === 'speed') {
+                        this.fps = this.fps - this.powerUp.value
+                    }
+
+                    if(this.powerUp.type === 'length'){
+
+                        for (let i = 0; i < this.powerUp.value; i++) {
+
+                            this.snake.clearRect(this.snakeBody[this.snakeLength - 1][0], this.snakeBody[this.snakeLength - 1][1], this.scaleFactor, this.scaleFactor)
+                            this.snakeBody.pop()
+                            this.snakeLength--
+                        }
+
+                    }
+                }
             }
 
             //Detect Bounds Collision
@@ -256,23 +399,20 @@ class Snake {
                 this.stop()
             }
 
-            //ToDo: Detect Self Collision
+            //Detect Self Collision
             const hitSelf = () =>{
-                return this.snakeBody.map((position , index)=>{
+                return this.snakeBody.map((part, index) => {
                     if(index > 0) {
-                        return this.snakePosition[0] === position[0] && this.snakePosition[1] === position[1]
+                        return part[0] === this.snakePosition[0] && part[1] === this.snakePosition[1]
                     }
-                    return false
-                })
+                }).filter(res => res === true)
             }
 
-        }else{
-            if(this.HIGH_SCORE < this.level - 1){
-                localStorage.setItem("SNAKE_HIGH_SCORE", this.level - 1)
-                document.getElementById('highScore').innerText = `${this.HIGH_SCORE}`
+            if(hitSelf().length > 0){
+                this.stop()
             }
+
         }
-
 
 
         //Loop

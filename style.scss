@@ -47,19 +47,46 @@ main.game{
 
   canvas, .splash{
     position: absolute;
+    cursor: none;
   }
 
   .splash{
     z-index: 10;
     color: #eb5050;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 1rem 4rem;
+
+    text-align: center;
+
+    .highscore{
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: white;
+      display: none;
+
+      &.js-active{
+        display: block;
+      }
+    }
 
     &.js-active{
       display: none;
     }
   }
 
-  .meta, .splash{
+  .splash{
     color: #eb5050;
   }
 
+}
+
+footer{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 1rem;
+}
+
+a, a:visited{
+  color: inherit;
 }

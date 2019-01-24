@@ -35,13 +35,33 @@ main.game {
       justify-content: space-between;
       padding: .5rem; }
   main.game canvas, main.game .splash {
-    position: absolute; }
+    position: absolute;
+    cursor: none; }
   main.game .splash {
     z-index: 10;
-    color: #eb5050; }
+    color: #eb5050;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 1rem 4rem;
+    text-align: center; }
+    main.game .splash .highscore {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: white;
+      display: none; }
+      main.game .splash .highscore.js-active {
+        display: block; }
     main.game .splash.js-active {
       display: none; }
-  main.game .meta, main.game .splash {
+  main.game .splash {
     color: #eb5050; }
+
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 1rem; }
+
+a, a:visited {
+  color: inherit; }
 
 /*# sourceMappingURL=style.css.map */
