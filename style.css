@@ -7,8 +7,8 @@ html, body {
 
 body {
   font-family: monospace;
-  color: white;
-  background-color: #436d6f; }
+  color: #e6e6e6;
+  background-color: #1d1d1d; }
 
 main.game {
   display: flex;
@@ -28,7 +28,8 @@ main.game {
       font-size: 1.2rem; }
       main.game .container.title h1 {
         margin: 2rem 0;
-        font-family: "Arial", serif; }
+        font-family: "Arial", serif;
+        color: #d93e46; }
     main.game .container.meta {
       font-size: 1rem;
       flex-direction: row;
@@ -39,8 +40,8 @@ main.game {
     cursor: none; }
   main.game .splash {
     z-index: 10;
-    color: #eb5050;
-    background-color: rgba(0, 0, 0, 0.3);
+    color: #d93e46;
+    background-color: rgba(0, 0, 0, 0.8);
     padding: 1rem 4rem;
     text-align: center; }
     main.game .splash > div {
@@ -55,7 +56,7 @@ main.game {
     main.game .splash.js-active {
       display: none; }
   main.game .splash {
-    color: #eb5050; }
+    color: #d93e46; }
 
 footer {
   position: absolute;

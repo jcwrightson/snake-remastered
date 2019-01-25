@@ -89,7 +89,7 @@ function () {
     this.ding = new Audio('ding.flac');
     this.newHighScore = new Audio('high-score.wav');
     this.backgroundColor = '#232323';
-    this.pipColor = '#eb5050';
+    this.pipColor = '#d93e46';
     this.reservedColors = [this.backgroundColor, this.pipColor];
   }
 
