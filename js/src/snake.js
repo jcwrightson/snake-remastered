@@ -16,8 +16,10 @@
         <canvas id="powerup"></canvas>
 
         <div class="splash">
-            <div class="highscore">New High Score!!</div>
-            <div>Press [SPACE] to Start</div>
+            <div>Level: <span id="level">0</span></div>
+            <div>Length: <span id="length"></span></div>
+            <div>FPS: <span id="frames"></span></div>
+            <div>High Score: <span id="highScore"></span></div>
         </div>
     </div>
 
@@ -47,7 +49,7 @@ class Snake {
      this.startFPS = 12.0
      this.scaleFactor = 15
      this.gameHeight = 40
-     this.gameWidth = 90
+     this.gameWidth = Math.floor((window.innerWidth * .45) / 10) > 100 ? 100 : Math.floor((window.innerWidth * .45) / 10)
      this.snakeBody = []
      this.snakeLength = 5
      this.level = 0
@@ -83,15 +85,9 @@ class Snake {
 
     }
 
-    isMultiple(x, multiple){
-        return x % multiple === 1
-    }
-
     init(){
 
         this.gameCanvas.style.backgroundColor = this.backgroundColor
-        this.beep.preload
-        this.ding.preload
 
         if(localStorage.getItem("SNAKE_HIGH_SCORE")){
             this.HIGH_SCORE = localStorage.getItem("SNAKE_HIGH_SCORE")
@@ -128,14 +124,18 @@ class Snake {
 
     }
 
-    areKeysActive(){
-     return this.keysActive
+    isMultiple(x, multiple){
+        return x % multiple === 1
     }
 
     isPixelinUse(coords){
      return this.snakeBody.filter(part => {
          return part[0] === coords[0] && part[1] === coords[1]
      }).length > 0
+    }
+
+    areKeysActive(){
+        return this.keysActive
     }
 
     bindEventListeners(){
@@ -166,6 +166,26 @@ class Snake {
                      break
                  }
                  case 'ArrowRight' : {
+                     toggleKeysActive()
+                     this.toggleDirection('right')
+                     break
+                 }
+                 case 'KeyW' : {
+                     toggleKeysActive()
+                     this.toggleDirection('up')
+                     break
+                 }
+                 case 'KeyS' : {
+                     toggleKeysActive()
+                     this.toggleDirection('down')
+                     break
+                 }
+                 case 'KeyA' : {
+                     toggleKeysActive()
+                     this.toggleDirection('left')
+                     break
+                 }
+                 case 'KeyD' : {
                      toggleKeysActive()
                      this.toggleDirection('right')
                      break

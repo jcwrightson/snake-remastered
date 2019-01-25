@@ -25,7 +25,7 @@ main.game {
     max-width: 900px; }
     main.game .container.title {
       flex-direction: row;
-      font-size: 1.5rem; }
+      font-size: 1.2rem; }
       main.game .container.title h1 {
         margin: 2rem 0;
         font-family: "Arial", serif; }
@@ -43,6 +43,8 @@ main.game {
     background-color: rgba(0, 0, 0, 0.3);
     padding: 1rem 4rem;
     text-align: center; }
+    main.game .splash > div {
+      padding: 5px 0; }
     main.game .splash .highscore {
       font-size: 2rem;
       margin-bottom: 1rem;

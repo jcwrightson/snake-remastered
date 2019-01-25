@@ -1,0 +1,36 @@
+{
+  "name": "snake-remastered",
+  "version": "1.0.0",
+  "description": "A remake of the classic snake game with some upgrades.",
+  "main": "js/src/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel js/src -d js/lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jcwrightson/snake-remastered.git"
+  },
+  "keywords": [
+    "snake",
+    "javascript",
+    "nokia",
+    "remastered",
+    "remake",
+    "new",
+    "upgrade",
+    "browser",
+    "web"
+  ],
+  "author": "John Christopher Wrightson",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/jcwrightson/snake-remastered/issues"
+  },
+  "homepage": "https://github.com/jcwrightson/snake-remastered#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1"
+  }
+}
