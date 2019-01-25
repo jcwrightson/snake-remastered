@@ -8,7 +8,7 @@ html, body {
 body {
   font-family: monospace;
   color: white;
-  background-color: #323a3e; }
+  background-color: #436d6f; }
 
 main.game {
   display: flex;
@@ -28,7 +28,7 @@ main.game {
       font-size: 1.5rem; }
       main.game .container.title h1 {
         margin: 2rem 0;
-        font-family: monospace; }
+        font-family: "Arial", serif; }
     main.game .container.meta {
       font-size: 1rem;
       flex-direction: row;
