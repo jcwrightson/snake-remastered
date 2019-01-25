@@ -30,7 +30,7 @@ main.game {
         margin: 2rem 0;
         font-family: "Arial", serif;
         color: #d93e46; }
-    main.game .container.meta {
+    main.game .container.meta, main.game .container.ai {
       font-size: 1rem;
       flex-direction: row;
       justify-content: space-between;

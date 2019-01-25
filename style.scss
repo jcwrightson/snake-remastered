@@ -37,7 +37,7 @@ main.game{
       }
     }
 
-    &.meta{
+    &.meta, &.ai{
       font-size: 1rem;
       flex-direction: row;
       justify-content: space-between;

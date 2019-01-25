@@ -46,12 +46,12 @@ class Snake {
 
      this.newLevel = false
      this.HIGH_SCORE = 0
-     this.startFPS = 12.0
+     this.startFPS = 15
      this.scaleFactor = 15
      this.gameHeight = 40
      this.gameWidth = Math.floor((window.innerWidth * .45) / 10) > 100 ? 100 : Math.floor((window.innerWidth * .45) / 10)
      this.snakeBody = []
-     this.snakeLength = 5
+     this.snakeLength = 50
      this.level = 0
      this.fps = this.startFPS
      this.dead = true
@@ -128,7 +128,7 @@ class Snake {
         return x % multiple === 1
     }
 
-    isPixelinUse(coords){
+    isPixelInUse(coords){
      return this.snakeBody.filter(part => {
          return part[0] === coords[0] && part[1] === coords[1]
      }).length > 0
@@ -206,16 +206,22 @@ class Snake {
 
     }
 
-    toggleDirection(dir){
-
-    const resetDir = () => {
-        this.up = false
-        this.down = false
-        this.left = false
-        this.right = false
+    getCurrentDirection(){
+        if(this.up){
+            return 'up'
+        }
+        if(this.down){
+            return 'down'
+        }
+        if(this.left){
+            return 'left'
+        }
+        if(this.right){
+            return 'right'
+        }
     }
 
-    const setDir = (dir) => {
+    setDir(dir){
         if(dir === 'up'){
             this.up = true
         }
@@ -233,35 +239,45 @@ class Snake {
         }
     }
 
-    if(this.up && dir !== 'down' || this.down && dir !== 'up'){
-        resetDir()
-        setDir(dir)
-    }
+    toggleDirection(dir){
 
-    if(this.left && dir !== 'right' || this.right && dir !== 'left'){
-        resetDir()
-        setDir(dir)
-    }
+        const resetDir = () => {
+            this.up = false
+            this.down = false
+            this.left = false
+            this.right = false
+        }
 
+        if(this.up && dir !== 'down' || this.down && dir !== 'up'){
+            resetDir()
+            this.setDir(dir)
+        }
+
+        if(this.left && dir !== 'right' || this.right && dir !== 'left'){
+            resetDir()
+            this.setDir(dir)
+        }
 
     }
 
     move(){
-        if(this.right){
-            return[1, 0]
+
+        if (this.right) {
+            return [1, 0]
         }
 
-        if(this.down){
-            return[0, 1]
+        if (this.down) {
+            return [0, 1]
         }
 
-        if(this.up){
-            return[0, -1]
+        if (this.up) {
+            return [0, -1]
         }
 
-        if(this.left){
-            return[-1, 0]
+        if (this.left) {
+            return [-1, 0]
         }
+
     }
 
     randomPixel(){
@@ -288,7 +304,7 @@ class Snake {
              this.powerUp.value = value
              this.powerUp.type = type
 
-             while (this.isPixelinUse(this.powerUpPosition)) {
+             while (this.isPixelInUse(this.powerUpPosition)) {
                  this.powerUpPosition = this.randomPixel()
              }
 
@@ -335,7 +351,7 @@ class Snake {
         this.newLevel = true
         this.snakePosition = [0,0]
         this.snakeBody = []
-        this.snakeLength = 5
+        this.snakeLength = 50
         this.down = true
         this.snakeColor = '#f2f2f2'
 
@@ -355,7 +371,7 @@ class Snake {
         this.pip.fillStyle = this.pipColor
         this.pipPosition = this.randomPixel()
 
-        while(this.isPixelinUse(this.pipPosition)){
+        while(this.isPixelInUse(this.pipPosition)){
             this.pipPosition = this.randomPixel()
         }
 
@@ -399,7 +415,7 @@ class Snake {
         }
 
         //Detect PowerUp Collision
-        if(this.powerUpPosition !== [0, 0]) {
+        if(this.powerUpPosition[0] !== 0 && this.powerUpPosition[1] !== 0) {
             if (this.powerUpPosition[0] === this.snakePosition[0] && this.powerUpPosition[1] === this.snakePosition[1]) {
 
                 if(this.powerUp.type !== 'color') {

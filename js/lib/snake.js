@@ -132,7 +132,7 @@ function () {
       return x % multiple === 1;
     }
   }, {
-    key: "isPixelinUse",
+    key: "isPixelInUse",
     value: function isPixelinUse(coords) {
       return this.snakeBody.filter(function (part) {
         return part[0] === coords[0] && part[1] === coords[1];
@@ -333,7 +333,7 @@ function () {
         _this3.powerUp.value = value;
         _this3.powerUp.type = type;
 
-        while (_this3.isPixelinUse(_this3.powerUpPosition)) {
+        while (_this3.isPixelInUse(_this3.powerUpPosition)) {
           _this3.powerUpPosition = _this3.randomPixel();
         }
 
@@ -400,7 +400,7 @@ function () {
       this.pip.fillStyle = this.pipColor;
       this.pipPosition = this.randomPixel();
 
-      while (this.isPixelinUse(this.pipPosition)) {
+      while (this.isPixelInUse(this.pipPosition)) {
         this.pipPosition = this.randomPixel();
       }
 
