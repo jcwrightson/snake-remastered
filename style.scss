@@ -24,7 +24,7 @@ main.game{
     align-items: center;
     width: 100%;
     position: relative;
-    max-width: 900px;
+    max-width: 1200px;
 
     &.title{
       flex-direction: row;
@@ -37,18 +37,29 @@ main.game{
       }
     }
 
-    &.meta, &.ai{
+    &.meta{
+      margin-top: 1rem;
+    }
+
+    &.meta, &.ai, &.buttons{
       font-size: 1rem;
       flex-direction: row;
       justify-content: space-between;
       padding: .5rem;
+      align-items: flex-start;
+
+
+      >div{
+        flex-basis: 25%;
+      }
 
     }
   }
 
   canvas, .splash{
     position: absolute;
-    cursor: none;
+    //cursor: none;
+    user-select: none;
   }
 
   .splash{
@@ -94,4 +105,17 @@ footer{
 
 a, a:visited{
   color: inherit;
+}
+
+button {
+  border: none;
+  font-size: 1rem;
+  background-color: #d93e46;
+  padding: .5rem 2rem;
+  text-transform: uppercase;
+
+  &.js-active{
+    background-color: #58d61b;
+  }
+
 }

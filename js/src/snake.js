@@ -46,12 +46,12 @@ class Snake {
 
      this.newLevel = false
      this.HIGH_SCORE = 0
-     this.startFPS = 15
+     this.startFPS = 12
      this.scaleFactor = 15
      this.gameHeight = 40
      this.gameWidth = Math.floor((window.innerWidth * .45) / 10) > 100 ? 100 : Math.floor((window.innerWidth * .45) / 10)
      this.snakeBody = []
-     this.snakeLength = 50
+     this.snakeLength = 7
      this.level = 0
      this.fps = this.startFPS
      this.dead = true
@@ -351,7 +351,7 @@ class Snake {
         this.newLevel = true
         this.snakePosition = [0,0]
         this.snakeBody = []
-        this.snakeLength = 50
+        this.snakeLength = 7
         this.down = true
         this.snakeColor = '#f2f2f2'
 
@@ -473,7 +473,7 @@ class Snake {
         }
 
         if(hitSelf().length > 0){
-            this.stop()
+            // this.stop()
         }
     }
 

@@ -22,7 +22,7 @@ main.game {
     align-items: center;
     width: 100%;
     position: relative;
-    max-width: 900px; }
+    max-width: 1200px; }
     main.game .container.title {
       flex-direction: row;
       font-size: 1.2rem; }
@@ -30,14 +30,19 @@ main.game {
         margin: 2rem 0;
         font-family: "Arial", serif;
         color: #d93e46; }
-    main.game .container.meta, main.game .container.ai {
+    main.game .container.meta {
+      margin-top: 1rem; }
+    main.game .container.meta, main.game .container.ai, main.game .container.buttons {
       font-size: 1rem;
       flex-direction: row;
       justify-content: space-between;
-      padding: .5rem; }
+      padding: .5rem;
+      align-items: flex-start; }
+      main.game .container.meta > div, main.game .container.ai > div, main.game .container.buttons > div {
+        flex-basis: 25%; }
   main.game canvas, main.game .splash {
     position: absolute;
-    cursor: none; }
+    user-select: none; }
   main.game .splash {
     z-index: 10;
     color: #d93e46;
@@ -66,5 +71,14 @@ footer {
 
 a, a:visited {
   color: inherit; }
+
+button {
+  border: none;
+  font-size: 1rem;
+  background-color: #d93e46;
+  padding: .5rem 2rem;
+  text-transform: uppercase; }
+  button.js-active {
+    background-color: #58d61b; }
 
 /*# sourceMappingURL=style.css.map */

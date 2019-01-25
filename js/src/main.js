@@ -1,4 +1,18 @@
 
+let useAI = false
+
+const toggleAI = () => {
+    useAI = !useAI
+
+    if(useAI){
+        document.getElementById('aiBtn').innerText = "AI On"
+        document.getElementById('aiBtn').classList.add('js-active')
+    }else{
+        document.getElementById('aiBtn').innerText = "AI Off"
+        document.getElementById('aiBtn').classList.remove('js-active')
+    }
+}
+
 window.addEventListener("DOMContentLoaded", ()=>{
     const game = new Snake()
     game.init()
@@ -30,10 +44,10 @@ window.addEventListener("DOMContentLoaded", ()=>{
 
     const AI = () => {
 
-        if(!game.dead) {
+        if(!game.dead && useAI) {
 
             document.getElementById('snakePosition').innerText = game.snakePosition
-            document.getElementById('pipPosition').innerText = game.pipPosition
+            // document.getElementById('pipPosition').innerText = game.pipPosition
 
 
             const withinBounds = (arr) =>{
@@ -68,6 +82,9 @@ window.addEventListener("DOMContentLoaded", ()=>{
             }
 
             const isValidMove = (vector, direction) =>{
+
+                //ToDo: Avoid dead ends...
+
                 return (validDirection(direction) && withinBounds(vector) && !game.isPixelInUse(vector))
             }
 
@@ -98,13 +115,52 @@ window.addEventListener("DOMContentLoaded", ()=>{
                 FindValidMove()
             }
 
+            const calcD2T = (snakePosition) => {
+                return [
+                    Math.abs(snakePosition[0] - game.pipPosition[0]),
+                    Math.abs(snakePosition[1] - game.pipPosition[1])
+                ]
+            }
+
+            const hunt = () => {
+                const d2T = calcD2T(game.snakePosition)
+                document.getElementById('distance').innerText = d2T
+
+                const doMove = (d) => {
+                    document.getElementById('move').innerText = d
+                    game.toggleDirection(d)
+                }
+
+                //[100, 100]
+
+                moves.map(direction => {
+                    const pV = predictVector(direction)
+                    // console.log(pV)
+                    if(isValidMove(pV, direction)){
+
+                        if(calcD2T(pV)[0] <= d2T[0] && calcD2T(pV)[1] <= d2T[1]){
+                            doMove(direction)
+                        }else {
+                            if(calcD2T(pV)[0] === 0){
+                                if(calcD2T(pV)[1] <= d2T[1]){
+                                    doMove(direction)
+                                }
+                            }
+                        }
+
+                    }
+                })
+
+            }
+
+            hunt()
+
             document.getElementById('currentMove').innerText = currentMove
 
         }
 
-
         setTimeout(()=>{
-            AI()
+                AI()
         }, 1000 / game.fps)
 
     }
