@@ -33,7 +33,7 @@ main.game {
     main.game .container.meta {
       margin-top: 1rem; }
     main.game .container.meta, main.game .container.ai, main.game .container.buttons {
-      font-size: 1rem;
+      font-size: .8rem;
       flex-direction: row;
       justify-content: space-between;
       padding: .5rem;

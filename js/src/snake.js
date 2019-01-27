@@ -8,26 +8,6 @@
     const game = new Snake()
     game.init()
 
-    MARKUP:
-
-    <div>
-        <canvas id="snake"></canvas>
-        <canvas id="pip"></canvas>
-        <canvas id="powerup"></canvas>
-
-        <div class="splash">
-            <div>Level: <span id="level">0</span></div>
-            <div>Length: <span id="length"></span></div>
-            <div>FPS: <span id="frames"></span></div>
-            <div>High Score: <span id="highScore"></span></div>
-        </div>
-    </div>
-
-    <div>
-        <div>Level: <span id="level">0</span></div>
-        <div>High Score: <span id="highScore"></span></div>
-    </div>
-
 */
 
 class Snake {
@@ -60,6 +40,7 @@ class Snake {
      this.left = false
      this.right = false
      this.powerUpTimer = null
+     this.powerUpActive = false
      this.colorSwitch = null
      this.keysActive = true
 
@@ -85,7 +66,10 @@ class Snake {
 
     }
 
-    init(){
+    init(options){
+
+        this.sounds = options.sounds || true
+        this.startFPS = options.startFPS || 12
 
         this.gameCanvas.style.backgroundColor = this.backgroundColor
 
@@ -128,7 +112,7 @@ class Snake {
         return x % multiple === 1
     }
 
-    isPixelInUse(coords){
+    isSnakeBody(coords){
      return this.snakeBody.filter(part => {
          return part[0] === coords[0] && part[1] === coords[1]
      }).length > 0
@@ -141,6 +125,7 @@ class Snake {
     bindEventListeners(){
 
      document.addEventListener('keydown', (e)=>{
+
          const toggleKeysActive = () => {
              this.keysActive = false
              setTimeout(()=>{
@@ -190,7 +175,8 @@ class Snake {
                      this.toggleDirection('right')
                      break
                  }
-                 case 'Space' : {
+                 case 'Enter' : {
+                     e.preventDefault()
                      if(this.dead){
                          this.resetGame()
                          document.querySelector('.splash').classList.toggle('js-active')
@@ -303,8 +289,9 @@ class Snake {
              this.powerUpPosition = this.randomPixel()
              this.powerUp.value = value
              this.powerUp.type = type
+             this.powerUpActive = true
 
-             while (this.isPixelInUse(this.powerUpPosition)) {
+             while (this.isSnakeBody(this.powerUpPosition)) {
                  this.powerUpPosition = this.randomPixel()
              }
 
@@ -330,6 +317,7 @@ class Snake {
                  this.powerUpPosition = [0, 0]
                  clearInterval(this.colorSwitch)
                  clearTimeout(this.powerUpTimer)
+                 this.powerUpActive = false
              }, seconds * 1000)
          }
 
@@ -338,6 +326,7 @@ class Snake {
         }else{
             this.powerUp.clearRect(0, 0, this.gameWidth * this.scaleFactor, this.gameHeight * this.scaleFactor)
             this.powerUpPosition = [0, 0]
+            this.powerUpActive = false
             clearInterval(this.colorSwitch)
             clearTimeout(this.powerUpTimer)
             dropPowerUp()
@@ -371,7 +360,7 @@ class Snake {
         this.pip.fillStyle = this.pipColor
         this.pipPosition = this.randomPixel()
 
-        while(this.isPixelInUse(this.pipPosition)){
+        while(this.isSnakeBody(this.pipPosition)){
             this.pipPosition = this.randomPixel()
         }
 
@@ -385,7 +374,7 @@ class Snake {
         if(this.level > 10){
 
             //Speed Reduction
-            if(this.fps >= 20) {
+            if(this.fps >= 25) {
                 if (this.isMultiple(this.level, Math.floor(Math.random() * Math.floor(10)))) {
                     this.doPowerUp(0.3, 'speed', this.randomColor(), 5)
                 }
@@ -393,8 +382,8 @@ class Snake {
 
             //Length Reduction
             if(this.snakeLength > 40) {
-                if (this.isMultiple(this.level, Math.floor(Math.random() * Math.floor(10)))) {
-                    this.doPowerUp(0.4, 'length', this.randomColor(), 8)
+                if (this.isMultiple(this.level, Math.floor(Math.random() * Math.floor(20)))) {
+                    this.doPowerUp(0.2, 'length', this.randomColor(), 8)
                 }
             }
 
@@ -409,16 +398,21 @@ class Snake {
     handleCollisions(){
         //Detect Pip Collision
         if(this.pipPosition[0] === this.snakePosition[0] && this.pipPosition[1] === this.snakePosition[1]){
-            this.ding.play()
+
+            if(this.sounds) {
+                this.ding.play()
+            }
             this.newLevel = true
             this.pip.clearRect(this.pipPosition[0], this.pipPosition[1], this.scaleFactor, this.scaleFactor)
         }
 
         //Detect PowerUp Collision
-        if(this.powerUpPosition[0] !== 0 && this.powerUpPosition[1] !== 0) {
+        if(this.powerUpActive) {
             if (this.powerUpPosition[0] === this.snakePosition[0] && this.powerUpPosition[1] === this.snakePosition[1]) {
 
-                if(this.powerUp.type !== 'color') {
+                this.powerUpActive = false
+
+                if(this.powerUp.type !== 'color' && this.sounds) {
                     this.beep.play()
                 }
 
@@ -429,7 +423,7 @@ class Snake {
                 }
 
                 if(this.powerUp.type === 'speed') {
-                    const reduction = Math.abs(this.fps * this.powerUp.value)
+                    const reduction = Math.round(this.fps * this.powerUp.value)
                     if(this.fps - reduction > this.startFPS){
                         this.fps = this.fps - reduction
                     }else{
@@ -473,7 +467,7 @@ class Snake {
         }
 
         if(hitSelf().length > 0){
-            // this.stop()
+            this.stop()
         }
     }
 

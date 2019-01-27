@@ -24,26 +24,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     const game = new Snake()
     game.init()
 
-    MARKUP:
-
-    <div>
-        <canvas id="snake"></canvas>
-        <canvas id="pip"></canvas>
-        <canvas id="powerup"></canvas>
-
-        <div class="splash">
-            <div>Level: <span id="level">0</span></div>
-            <div>Length: <span id="length"></span></div>
-            <div>FPS: <span id="frames"></span></div>
-            <div>High Score: <span id="highScore"></span></div>
-        </div>
-    </div>
-
-    <div>
-        <div>Level: <span id="level">0</span></div>
-        <div>High Score: <span id="highScore"></span></div>
-    </div>
-
 */
 var Snake =
 /*#__PURE__*/
@@ -62,12 +42,12 @@ function () {
     this.powerUpPosition = [0, 0];
     this.newLevel = false;
     this.HIGH_SCORE = 0;
-    this.startFPS = 12.0;
+    this.startFPS = 12;
     this.scaleFactor = 15;
     this.gameHeight = 40;
     this.gameWidth = Math.floor(window.innerWidth * .45 / 10) > 100 ? 100 : Math.floor(window.innerWidth * .45 / 10);
     this.snakeBody = [];
-    this.snakeLength = 5;
+    this.snakeLength = 7;
     this.level = 0;
     this.fps = this.startFPS;
     this.dead = true;
@@ -76,6 +56,7 @@ function () {
     this.left = false;
     this.right = false;
     this.powerUpTimer = null;
+    this.powerUpActive = false;
     this.colorSwitch = null;
     this.keysActive = true;
     this.gameCanvas.width = this.gameWidth * this.scaleFactor;
@@ -95,7 +76,9 @@ function () {
 
   _createClass(Snake, [{
     key: "init",
-    value: function init() {
+    value: function init(options) {
+      this.sounds = options.sounds || true;
+      this.startFPS = options.startFPS || 12;
       this.gameCanvas.style.backgroundColor = this.backgroundColor;
 
       if (localStorage.getItem("SNAKE_HIGH_SCORE")) {
@@ -132,8 +115,8 @@ function () {
       return x % multiple === 1;
     }
   }, {
-    key: "isPixelInUse",
-    value: function isPixelinUse(coords) {
+    key: "isSnakeBody",
+    value: function isSnakeBody(coords) {
       return this.snakeBody.filter(function (part) {
         return part[0] === coords[0] && part[1] === coords[1];
       }).length > 0;
@@ -230,8 +213,10 @@ function () {
                 break;
               }
 
-            case 'Space':
+            case 'Enter':
               {
+                e.preventDefault();
+
                 if (_this.dead) {
                   _this.resetGame();
 
@@ -247,6 +232,44 @@ function () {
       });
     }
   }, {
+    key: "getCurrentDirection",
+    value: function getCurrentDirection() {
+      if (this.up) {
+        return 'up';
+      }
+
+      if (this.down) {
+        return 'down';
+      }
+
+      if (this.left) {
+        return 'left';
+      }
+
+      if (this.right) {
+        return 'right';
+      }
+    }
+  }, {
+    key: "setDir",
+    value: function setDir(dir) {
+      if (dir === 'up') {
+        this.up = true;
+      }
+
+      if (dir === 'down') {
+        this.down = true;
+      }
+
+      if (dir === 'left') {
+        this.left = true;
+      }
+
+      if (dir === 'right') {
+        this.right = true;
+      }
+    }
+  }, {
     key: "toggleDirection",
     value: function toggleDirection(dir) {
       var _this2 = this;
@@ -258,32 +281,14 @@ function () {
         _this2.right = false;
       };
 
-      var setDir = function setDir(dir) {
-        if (dir === 'up') {
-          _this2.up = true;
-        }
-
-        if (dir === 'down') {
-          _this2.down = true;
-        }
-
-        if (dir === 'left') {
-          _this2.left = true;
-        }
-
-        if (dir === 'right') {
-          _this2.right = true;
-        }
-      };
-
       if (this.up && dir !== 'down' || this.down && dir !== 'up') {
         resetDir();
-        setDir(dir);
+        this.setDir(dir);
       }
 
       if (this.left && dir !== 'right' || this.right && dir !== 'left') {
         resetDir();
-        setDir(dir);
+        this.setDir(dir);
       }
     }
   }, {
@@ -332,8 +337,9 @@ function () {
         _this3.powerUpPosition = _this3.randomPixel();
         _this3.powerUp.value = value;
         _this3.powerUp.type = type;
+        _this3.powerUpActive = true;
 
-        while (_this3.isPixelInUse(_this3.powerUpPosition)) {
+        while (_this3.isSnakeBody(_this3.powerUpPosition)) {
           _this3.powerUpPosition = _this3.randomPixel();
         }
 
@@ -361,6 +367,7 @@ function () {
           _this3.powerUpPosition = [0, 0];
           clearInterval(_this3.colorSwitch);
           clearTimeout(_this3.powerUpTimer);
+          _this3.powerUpActive = false;
         }, seconds * 1000);
       };
 
@@ -369,6 +376,7 @@ function () {
       } else {
         this.powerUp.clearRect(0, 0, this.gameWidth * this.scaleFactor, this.gameHeight * this.scaleFactor);
         this.powerUpPosition = [0, 0];
+        this.powerUpActive = false;
         clearInterval(this.colorSwitch);
         clearTimeout(this.powerUpTimer);
         dropPowerUp();
@@ -383,7 +391,7 @@ function () {
       this.newLevel = true;
       this.snakePosition = [0, 0];
       this.snakeBody = [];
-      this.snakeLength = 5;
+      this.snakeLength = 7;
       this.down = true;
       this.snakeColor = '#f2f2f2';
       this.snake.clearRect(0, 0, this.gameWidth * this.scaleFactor, this.gameHeight * this.scaleFactor);
@@ -400,7 +408,7 @@ function () {
       this.pip.fillStyle = this.pipColor;
       this.pipPosition = this.randomPixel();
 
-      while (this.isPixelInUse(this.pipPosition)) {
+      while (this.isSnakeBody(this.pipPosition)) {
         this.pipPosition = this.randomPixel();
       }
 
@@ -411,7 +419,7 @@ function () {
 
       if (this.level > 10) {
         //Speed Reduction
-        if (this.fps >= 20) {
+        if (this.fps >= 25) {
           if (this.isMultiple(this.level, Math.floor(Math.random() * Math.floor(10)))) {
             this.doPowerUp(0.3, 'speed', this.randomColor(), 5);
           }
@@ -419,8 +427,8 @@ function () {
 
 
         if (this.snakeLength > 40) {
-          if (this.isMultiple(this.level, Math.floor(Math.random() * Math.floor(10)))) {
-            this.doPowerUp(0.4, 'length', this.randomColor(), 8);
+          if (this.isMultiple(this.level, Math.floor(Math.random() * Math.floor(20)))) {
+            this.doPowerUp(0.2, 'length', this.randomColor(), 8);
           }
         } //Change Color
 
@@ -438,15 +446,20 @@ function () {
 
       //Detect Pip Collision
       if (this.pipPosition[0] === this.snakePosition[0] && this.pipPosition[1] === this.snakePosition[1]) {
-        this.ding.play();
+        if (this.sounds) {
+          this.ding.play();
+        }
+
         this.newLevel = true;
         this.pip.clearRect(this.pipPosition[0], this.pipPosition[1], this.scaleFactor, this.scaleFactor);
       } //Detect PowerUp Collision
 
 
-      if (this.powerUpPosition !== [0, 0]) {
+      if (this.powerUpActive) {
         if (this.powerUpPosition[0] === this.snakePosition[0] && this.powerUpPosition[1] === this.snakePosition[1]) {
-          if (this.powerUp.type !== 'color') {
+          this.powerUpActive = false;
+
+          if (this.powerUp.type !== 'color' && this.sounds) {
             this.beep.play();
           }
 
@@ -457,7 +470,7 @@ function () {
           }
 
           if (this.powerUp.type === 'speed') {
-            var reduction = Math.abs(this.fps * this.powerUp.value);
+            var reduction = Math.round(this.fps * this.powerUp.value);
 
             if (this.fps - reduction > this.startFPS) {
               this.fps = this.fps - reduction;
