@@ -56,9 +56,9 @@ export default class Snake {
 
 		this.snakeColor = '#f2f2f2'
 
-		this.beep = new Audio('beep.wav')
-		this.ding = new Audio('ding.flac')
-		this.newHighScore = new Audio('high-score.wav')
+		// this.beep = new Audio('./assets/beep.wav')
+		// this.ding = new Audio('./assets/ding.flac')
+		// this.newHighScore = new Audio('./assets/high-score.wav')
 
 		this.backgroundColor = '#232323'
 
@@ -102,7 +102,7 @@ export default class Snake {
 
 		if(this.HIGH_SCORE < this.level - 1){
 			this.HIGH_SCORE = this.level - 1
-			this.newHighScore.play()
+			// this.newHighScore.play()
 			document.querySelector('.splash .highscore').classList.toggle('js-active')
 			localStorage.setItem("SNAKE_HIGH_SCORE", this.level - 1)
 			document.getElementById('highScore').innerText = `${this.HIGH_SCORE}`
@@ -425,7 +425,7 @@ export default class Snake {
 		if(this.pipPosition[0] === this.snakePosition[0] && this.pipPosition[1] === this.snakePosition[1]){
 
 			if(this.sounds) {
-				this.ding.play()
+				// this.ding.play()
 			}
 			this.newLevel = true
 			this.pip.clearRect(this.pipPosition[0], this.pipPosition[1], this.scaleFactor, this.scaleFactor)
@@ -438,7 +438,7 @@ export default class Snake {
 				this.powerUpActive = false
 
 				if(this.powerUp.type !== 'color' && this.sounds) {
-					this.beep.play()
+					// this.beep.play()
 				}
 
 				this.powerUp.clearRect(0, 0, this.gameWidth * this.scaleFactor, this.gameHeight * this.scaleFactor)
