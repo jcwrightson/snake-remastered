@@ -1,14 +1,4 @@
-/*
-    JS Snake
-    jcwrightson@gmail.com
-    https://jcwrightson.com
-
-    USAGE:
-
-    const game = new Snake()
-    game.init()
-
-*/
+// ToDo: Prefer composition / inheritance
 
 export default class Snake {
   constructor() {
