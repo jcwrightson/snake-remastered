@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <title>Snake Remastered</title>
+
+     <!--Global site tag (gtag.js) - Google Analytics-->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-40264811-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-40264811-3');
+    </script>
+</head>
+<body>
+
+    <main class="game">
+
+        <div class="container title">
+            <h1>Snake Remastered</h1>
+        </div>
+
+        <div class="container view">
+            <canvas id="snake"></canvas>
+            <canvas id="pip"></canvas>
+            <canvas id="powerup"></canvas>
+            <div class="splash">
+                <div class="highscore">New High Score!!</div>
+                <div class="instructions">Use [Arrow Keys] or [WASD]</div>
+                <div>Press [ENTER] to Start!</div>
+            </div>
+
+        </div>
+
+        <div class="container meta">
+            <div>Level: <span id="level">0</span></div>
+            <div>Length: <span id="length"></span></div>
+            <div>FPS: <span id="frames"></span></div>
+            <div>High Score: <span id="highScore"></span></div>
+        </div>
+
+        <div class="container ai">
+            <div>Snake Position: <span id="snakePosition"></span></div>
+            <div>Next Move: <span id="currentMove"></span></div>
+            <div>Distance To Target: <span id="distance"></span></div>
+            <div>AI Move: <span id="move"></span></div>
+        </div>
+
+        <div class="container buttons">
+            <button onclick="toggleAI()" id="aiBtn">AI Off</button>
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="container">
+        made by <a href="https://jcwrightson.com/">jcwrightson</a>
+        </div>
+    </footer>
+
+</body>
+</html>
