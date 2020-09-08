@@ -7,7 +7,7 @@ const Snake = props => {
 	  snake = gameCanvas.getContext('2d'),
 	  pip = pipCanvas.getContext('2d'),
 	  powerUp = powerUpCanvas.getContext('2d'),
-	  reservedColors = [backgroundColor, pipColor],
+	  reservedColors = [backgroundColor, pipColor, '#00f70c'],
 	  moves = ['up', 'down', 'left', 'right']
   
 	let snakePosition = [0, 0],
@@ -16,14 +16,14 @@ const Snake = props => {
 	  newLevel = false,
 	  HIGH_SCORE = 0,
 	  startFPS = 12,
-	  scaleFactor = 15,
-	  gameHeight = 35,
-	  gameWidth = 80,
+	  scaleFactor = props.scaleFactor || 15,
+	  gameHeight = props.gameHeight || 35,
+	  gameWidth = props.gameWidth || 80,
 	  snakeBody = [],
 	  snakeLength = 7,
 	  sounds = false,
 	  level = 0,
-	  fps = startFPS,
+	  fps = props.fps || startFPS,
 	  dead = true,
 	  up = false,
 	  down = true,
@@ -60,8 +60,13 @@ const Snake = props => {
   
 	  document.querySelector('.view').style.height = `${gameHeight *
 		scaleFactor}px`
+		document.querySelector('.view').style.width = `${gameWidth *
+			scaleFactor}px`
 	  document.getElementById('highScore').innerText = `${HIGH_SCORE}`
 	  document.querySelector('.splash .highscore').classList.remove('js-active')
+
+	  document.querySelector('.meta').style.fontSize = `${0.1 *
+		scaleFactor}rem`
   
 	  bindEventListeners()
 	  toggleDirection('down')
