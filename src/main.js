@@ -4,7 +4,9 @@ import Snake from './snake'
 import '../style.scss'
 
 window.addEventListener('DOMContentLoaded', () => {
-  Snake({
+  const game = Snake()
+
+  game.init({
     sounds: false,
     startFPS: 10,
     scaleFactor: 15,
