@@ -1,81 +1,89 @@
-@import url('https://fonts.googleapis.com/css?family=Gloria+Hallelujah|VT323&display=swap');
-html, body{
+@import url('https://fonts.googleapis.com/css?family=Major+Mono+Display|Inconsolata:200&display=swap');
+html,
+body {
   margin: 0;
   padding: 0;
 }
 
-*{box-sizing: border-box}
+* {
+  box-sizing: border-box;
+}
 
-
-body{
+body {
   font-family: monospace;
   color: #e6e6e6;
   background-color: #111;
+  display: flex;
 }
 
-main.game{
+main.game {
+  margin: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-direction: column;
   margin-top: 2rem;
-  .container{
+  .container {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     position: relative;
-    max-width: 1200px;
 
-    &.title{
+    &.title {
       flex-direction: row;
       font-size: 1.2rem;
-      h1{
-        margin: 2rem 0;
-        font-family: "Gloria Hallelujah";
-        font-size: 3rem;
-        color: #d93e46;
-        color: #00f7ad;
+      h1 {
+        margin: 3rem 0;
+        font-family: 'Major Mono Display', monospace;
+        font-size: 1.8rem;
+        color: #6e2424;
       }
     }
 
-    &.meta{
+    &.meta {
       margin-top: 1rem;
-      font-family: "VT323", monospace;
-      font-size: 1rem !important;
-      width: 100%;
-      
+      font-family: 'Inconsolata', monospace;
+      font-size: 0.7rem !important;
+      text-transform: uppercase;
 
+      width: 100%;
+      justify-content: space-between;
+      align-items: flex-start;
     }
 
-    &.meta, &.ai, &.buttons{
-      font-size: .8rem;
-      flex-direction: row;
-      justify-content: space-between;
-      padding: .5rem;
-      align-items: flex-start;
+    .block {
+      flex-direction: column;
+      justify-content: flex-start;
+      padding: 0.5rem;
+      display: flex;
 
-
-      >div > span{
-        flex-basis: 25%;
-        justify-content: center;
+      button {
+        margin-bottom: 1rem;
       }
 
-    }
-
-    &.meta{
-      position: absolute;
-      bottom:-10%;
+      > div {
+        padding: 0.2rem 0rem;
+      }
     }
   }
 
-  canvas, .splash{
+  .ai-elem {
+    display: none;
+
+    &.js-active {
+      display: block;
+    }
+  }
+
+  canvas,
+  .splash {
     position: absolute;
     cursor: none;
     user-select: none;
   }
 
-  .splash{
+  .splash {
     z-index: 10;
     color: #d93e46;
     background-color: rgba(0, 0, 0, 0.8);
@@ -87,54 +95,70 @@ main.game{
       padding: 5px 0;
     }
 
-    .highscore{
+    .highscore {
       font-size: 2rem;
       margin-bottom: 1rem;
       color: white;
       display: none;
 
-      &.js-active{
+      &.js-active {
         display: block;
       }
     }
 
-    &.js-active{
+    &.js-active {
       display: none;
     }
   }
 
-  .splash{
+  .splash {
     color: #d93e46;
   }
-
 }
 
-footer{
+footer {
   position: absolute;
   bottom: 0;
   width: 100%;
   padding: 1rem;
 }
 
-a, a:visited{
+a,
+a:visited {
   color: inherit;
-  opacity: .5;
+  opacity: 0.5;
 
-  &:hover{
+  &:hover {
     opacity: 1;
   }
-
 }
 
 button {
   border: none;
   font-size: 1rem;
   background-color: #d93e46;
-  padding: .5rem 2rem;
+  padding: 0.5rem 2rem;
   text-transform: uppercase;
+  font-family: monospace;
+  user-select: none;
+  border-radius: 3px;
+  min-width: 130px;
 
-  &.js-active{
-    background-color: #58d61b;
+  &.js-active {
+    background-color: #85d61bbd;
   }
 
+  &.normal {
+    background-color: #333;
+    color: #fff;
+  }
+
+  &.turbo {
+    background-color: #333;
+    color: #fff;
+
+    &.active {
+      background-color: rgb(185, 121, 0);
+    }
+  }
 }
