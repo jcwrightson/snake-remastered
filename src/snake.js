@@ -49,7 +49,6 @@ const Snake = () => {
     gameWidth,
     snakeBody,
     snakeLength,
-    sounds,
     level,
     fps,
     dead,
@@ -431,9 +430,6 @@ const Snake = () => {
       pipPosition[0] === snakePosition[0] &&
       pipPosition[1] === snakePosition[1]
     ) {
-      if (sounds) {
-        // ding.play()
-      }
       newLevel = true
       pip.clearRect(pipPosition[0], pipPosition[1], scaleFactor, scaleFactor)
     }
@@ -445,10 +441,6 @@ const Snake = () => {
         powerUpPosition[1] === snakePosition[1]
       ) {
         powerUpActive = false
-
-        if (powerUp.type !== 'color' && sounds) {
-          // beep.play()
-        }
 
         powerUp.clearRect(
           0,
